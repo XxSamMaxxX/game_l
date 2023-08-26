@@ -17,7 +17,68 @@ for image_path in image_paths:
     image = p.image.load(image_path)
     images.append(image)
 
+waters = 0
+sands = 0
+stones = 0
+forests = 0
 
+COUNT_BIOME = 0
+land_to_water_ratio = 70
+
+def biom_generate(count_tails):
+    global COUNT_BIOME, waters, sands, stones, forests
+    x = int((((count_tails * 100) / land_to_water_ratio)/2))
+    forests = x
+    x = count_tails - x
+
+    wtr = int(x * 0.33)
+    snd = int(x * 0.33)
+    stn = int(x * 0.33)
+    limit_list = [wtr,snd,stn]
+  
+    oper = 0
+    for count in limit_list:
+        oper +=1
+        for _ in range(count):
+            COUNT_BIOME +=1
+
+        if oper == 1:
+            waters = COUNT_BIOME
+        elif oper == 2:
+            sands = COUNT_BIOME
+        elif oper == 3:
+            stones = COUNT_BIOME
+            
+        COUNT_BIOME = 0
+
+def image_tail_choice():
+    global waters, sands, stones, forests
+    rnd = randint(1,20)
+
+    if rnd >=1 and rnd <=3:
+        if waters >= 1:
+            img = images[3]
+            waters-=1
+        else:
+            img = images[0]
+        
+    elif rnd >=4 and rnd <=9:
+        if stones >= 1:
+            img = images[2]
+            stones-=1
+        else:
+            img = images[0]
+
+    elif rnd >=10 and rnd <=17:
+        if sands >= 1:
+            img = images[1]
+            sands-=1
+        else:
+            img = images[0]  
+    else:
+        img = images[0]
+    return img
+            
 class tails(behaviors):
     area_x = -43
     area_y = 0
@@ -26,16 +87,17 @@ class tails(behaviors):
     revers = 0
     two_block = 1
     count = 0
+
     def __init__(self):
         super().__init__()
         self.x, self.y = tails.area_x, tails.area_y
-        self.image = p.transform.scale(choice(images), (sprite_px, sprite_px))
+        self.image = p.transform.scale(image_tail_choice(), (sprite_px, sprite_px))
         self.rect = p.Rect(self.x, self.y, sprite_px, sprite_px)
         self.wood = False
         self.iron = False
         self.wheat = False
         spawn_rsc = randint(0,20)
-        
+
         if spawn_rsc == 1:
             wood.append(woods(self.x, self.y))
             self.wood = True

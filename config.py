@@ -1,8 +1,11 @@
 from map.tail.script.tail import*
 
+count_tails = 826
+biom_generate(count_tails)
+
 #obj
 start = time.time()
-tail = [tails() for _ in range(826)]
+tail = [tails() for _ in range(count_tails)]
 end = time.time()
 print( end - start)
 
