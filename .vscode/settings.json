@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./controller/behavior",
+        "./obj/player/script"
+    ]
+}
