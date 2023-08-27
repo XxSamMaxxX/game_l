@@ -1,5 +1,5 @@
 from config import*
-
+#Hello dude
 while True:
     screen.fill(WHITE)
     for t in tail:
