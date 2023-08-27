@@ -16,6 +16,9 @@ while True:
     if fortress_list:
         for f in fortress_list:
             f.draw()
+    if metal:
+        for m in metal:
+            m.draw()
 
     keys = p.key.get_pressed()
         

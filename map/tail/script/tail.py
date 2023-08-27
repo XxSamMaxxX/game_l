@@ -96,6 +96,7 @@ class tails(behaviors):
         self.wood = False
         self.iron = False
         self.wheat = False
+        self.metal = False
         spawn_rsc = randint(0,20)
 
         if spawn_rsc == 1:
@@ -107,6 +108,9 @@ class tails(behaviors):
         elif spawn_rsc == 3:
             wheat.append(wheats(self.x, self.y))
             self.wheat = True
+        elif spawn_rsc == 4:
+            wheat.append(metals(self.x, self.y))
+            self.metal = True
 
         tails.limit_x+=1
 
