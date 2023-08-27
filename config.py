@@ -1,5 +1,5 @@
 from map.tail.script.tail import*
-
+from building.areas.script.building_area import*
 count_tails = 826
 biom_generate(count_tails)
 
@@ -7,7 +7,7 @@ biom_generate(count_tails)
 start = time.time()
 tail = [tails() for _ in range(count_tails)]
 end = time.time()
-print( end - start)
+print(end - start)
 
 #display
 FPS = 60

@@ -13,6 +13,9 @@ while True:
     if wheat:
         for w in wheat:
             w.draw()
+    if fortress_list:
+        for f in fortress_list:
+            f.draw()
 
     keys = p.key.get_pressed()
         
@@ -26,7 +29,11 @@ while True:
                         print("Наличие дерева на ячейке:", t.wood)
                     else:
                         print("Наличие дерева на ячейке:", t.wood)
-    
+        elif event.type == p.MOUSEBUTTONDOWN and event.button == 3:
+            mouse_x, mouse_y = event.pos    
+            for t in tail:
+                if t.rect.collidepoint(mouse_x, mouse_y):
+                    fortress_list.append(fortress(t.x, t.y))
         
     p.display.flip()
     clock.tick(FPS)
