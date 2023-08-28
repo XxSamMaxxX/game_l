@@ -1,30 +1,7 @@
-from map.tail.script.tail import*
-from building.areas.script.building_area import*
-count_tails = 826
-biom_generate(count_tails)
+from controller.module.module import*
+from scene.path import*
 
 #obj
-start = time.time()
-tail = [tails() for _ in range(count_tails)]
-end = time.time()
-print(end - start)
-def save_data():
-    data = []
-    for t in tail:
-        tail_data = {
-            "x": t.x,
-            "y": t.y,
-            "image": t.full_image_path,
-            "wood": t.wood,
-            "iron": t.iron,
-            "wheat": t.wheat,
-            "metal": t.metal
-        }
-        data.append(tail_data)
-    with open('data.json', 'w') as file:
-        json.dump(data, file)
-
-
 
 #display
 FPS = 60
