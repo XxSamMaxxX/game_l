@@ -1,21 +1,9 @@
 from controller.behavior.behavior import*
-from controller.path_controller.path_controller import*
+from controller.path_controller.path_obj import*
 
 sprite_px = 64
 
 current_dir = os.path.dirname(__file__)
-img_dir = os.path.join(current_dir, '..', 'img')
-
-image_paths = []
-for filename in os.listdir(img_dir):
-    if filename.endswith('.png'):
-        image_path = os.path.join(img_dir, filename)
-        image_paths.append(image_path)
-
-images = []
-for image_path in image_paths:
-    image = p.image.load(image_path)
-    images.append(image)
 
 waters = 0
 sands = 0
@@ -50,41 +38,38 @@ def biom_generate(count_tails):
             stones = COUNT_BIOME
             
         COUNT_BIOME = 0
-
+# 0-лес 1-песок 2-камень 3-вода
 def image_tail_choice():
     global waters, sands, stones, forests
     rnd = randint(1,20)
 
     if rnd >=1 and rnd <=3:
         if waters >= 1:
-            img = images[3]
-            image_index = 3
+            ind,img = img_any('water', current_dir)
             waters-=1
         else:
-            img = images[0]
-            image_index = 0
+            ind,img = img_any('forest', current_dir) 
         
     elif rnd >=4 and rnd <=9:
         if stones >= 1:
-            img = images[2]
-            image_index = 2
+            ind,img = img_any('stone', current_dir)
             stones-=1
         else:
-            img = images[0]
-            image_index = 0
+            ind,img = img_any('forest', current_dir)
 
     elif rnd >=10 and rnd <=17:
         if sands >= 1:
-            img = images[1]
-            image_index = 1
+            ind,img = img_any('sand', current_dir)
             sands-=1
         else:
-            img = images[0]  
-            image_index = 0
+            ind,img = img_any('forest', current_dir) 
+            
     else:
-        img = images[0]
-        image_index = 0
-    image_filename = os.path.basename(image_paths[image_index])
+        ind,img = img_any('forest', current_dir)
+        
+    image_index = ind
+
+    image_filename = os.path.basename(image_index)
     full_image_path = os.path.join(img_dir, image_filename)
     return img,full_image_path
             
@@ -169,6 +154,20 @@ class tails(behaviors):
 
                 tails.limit_y = 1
         else:
+            self.x, self.y = x, y
             img = p.image.load(img_p)
+            self.image = img
             self.rect = p.Rect(x, y, sprite_px, sprite_px)
-                    
+            
+def info(mouse_x,mouse_y):
+    for t in tail:
+        if t.rect.collidepoint(mouse_x, mouse_y):
+            if t.wood:
+                print("Наличие дерева на ячейке:", t.wood)
+            else:
+                print("Наличие дерева на ячейке:", t.wood)
+
+
+count_tails = 826
+biom_generate(count_tails)
+tail = [tails() for _ in range(count_tails)]
