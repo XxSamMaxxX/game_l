@@ -68,10 +68,11 @@ def image_tail_choice():
         ind,img = img_any('forest', current_dir)
         
     image_index = ind
+    img_dir = os.path.join(current_dir, '..', 'img')
 
     image_filename = os.path.basename(image_index)
-    full_image_path = os.path.join(img_dir, image_filename)
-    return img,full_image_path
+
+    return img,ind
             
 class tails(behaviors):
     area_x = -43
