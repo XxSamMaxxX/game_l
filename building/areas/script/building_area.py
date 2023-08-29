@@ -21,6 +21,7 @@ for image_path in image_paths:
 class fortress(behaviors):
     def __init__(self, x_tail, y_tail):
         super().__init__()
+        self.sprite_px = sprite_px
         self.x, self.y = x_tail, y_tail
         self.image = p.transform.scale(images[0], (sprite_px, sprite_px))
         self.rect = p.Rect(self.x, self.y, sprite_px, sprite_px)

@@ -86,6 +86,7 @@ class tails(behaviors):
     def __init__(self,saved = 0,x=0,y=0,img_p =0):
         super().__init__()
         if saved == 0:
+            self.sprite_px = sprite_px
             self.x, self.y = tails.area_x, tails.area_y
             img, self.full_image_path = image_tail_choice()
             self.image = p.transform.scale(img, (sprite_px, sprite_px))

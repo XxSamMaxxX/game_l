@@ -16,7 +16,7 @@ for music_path in music_paths:
     music = p.mixer.Sound(music_path)
     musics.append(music)
 
-current_music_index = 0
+current_music_index = randint(0, len(musics))
 
 def play_next_music():
     global current_music_index
@@ -24,6 +24,10 @@ def play_next_music():
         current_music = musics[current_music_index]
         current_music.play()
         current_music_index += 1
+    else:
+        current_music_index = 0
+        current_music = musics[current_music_index]
+        current_music.play()
 
 def start_music():
     play_next_music()

@@ -15,6 +15,7 @@ metal = []
 class metals (behaviors):
     def __init__(self,x,y):
         super().__init__()
+        self.sprite_px = sprite_px
         self.x, self.y = x+12, y+12
         self.image = p.transform.scale(metal_image, (32, 32))
         self.rect = p.Rect(self.x, self.y, 32, 32)
