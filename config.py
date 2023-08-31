@@ -8,7 +8,7 @@ p.init()
 #obj
 
 #display
-FPS = 20
+FPS = 60
 WIDTH, HEIGHT = 1920, 1080
 
 

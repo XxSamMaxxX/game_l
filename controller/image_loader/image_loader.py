@@ -45,9 +45,8 @@ def img_any(name, current_dir, preset=True):
 
     return selected_image_path, image
 
-def img_animation():
-    current_dir = os.path.dirname(__file__)
-    img_dir = os.path.join(current_dir, '..', 'img')
+def img_animation(name, current_dir,):
+    img_dir = os.path.join(current_dir, '..', 'img',name)
 
     image_paths = []
     for filename in os.listdir(img_dir):
@@ -59,3 +58,4 @@ def img_animation():
     for image_path in image_paths:
         image = p.image.load(image_path)
         images.append(image)
+    return images
