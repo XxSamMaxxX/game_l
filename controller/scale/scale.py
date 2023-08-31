@@ -1,33 +1,40 @@
-WIDTH, HEIGHT = 1920, 1080
-scale = 1.0
-center_x = WIDTH // 2
-center_y = HEIGHT // 2
+class Camera:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+        self.center_x = width 
+        self.center_y = height 
+        self.scale = 1.0  # Начальный масштаб
 
+    def get_scale(self):
+        return self.scale
 
-def get_scale():
-    return scale
-def get_x():
-    return center_x
-def get_y():
-    return center_y
+    def get_x(self):
+        return self.center_x
 
-def scale_plus():
-    global scale, center_x, center_y
-    scale *= 1.1
-def scale_minus():
-    global scale, center_x, center_y
-    scale /= 1.1
+    def get_y(self):
+        return self.center_y
 
-def camera_moving_left():
-    global center_x
-    center_x += 100
-def camera_moving_right():
-    global center_x
-    center_x -= 100
+    def scale_plus(self):
+        new_scale = self.scale + 0.1
+        if 1.0 <= new_scale <= 1.5:
+            self.scale = new_scale
 
-def camera_up():
-    global scale, center_x, center_y
-    center_x -= 10
-def camera_down():
-    global scale, center_x, center_y
-    center_x -= 10
+    def scale_minus(self):
+        new_scale = self.scale - 0.1
+        if 1.0 <= new_scale <= 1.5:
+            self.scale = new_scale
+    def move_left(self):
+        self.center_x -= 100
+
+    def move_right(self):
+        self.center_x += 100
+
+    def move_up(self):
+        self.center_y -= 100
+
+    def move_down(self):
+        self.center_y += 100
+
+    def is_point_visible(self, x, y):
+        return -100 <= x < 1920 and -100 <= y < 1080
