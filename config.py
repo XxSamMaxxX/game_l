@@ -1,11 +1,14 @@
 from controller.module.module import*
 from scene.path import*
+os.environ['SDL_VIDEO_RENDERER'] = 'direct3d'
+p.init()
+
 
 
 #obj
 
 #display
-FPS = 60
+FPS = 20
 WIDTH, HEIGHT = 1920, 1080
 
 

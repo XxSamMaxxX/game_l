@@ -111,7 +111,7 @@ class tails(p.sprite.Sprite):
                 self.metal = True
 
             tails.limit_x+=1
-            
+
             if tails.limit_x < 69:
                 if tails.count == 0:
                     tails.area_x += 43
@@ -160,46 +160,7 @@ class tails(p.sprite.Sprite):
             img = p.image.load(img_p)
             self.image = img
             self.rect = p.Rect(x, y, sprite_px, sprite_px)
-
-    def draw(self, camera):
-        self.moved(camera)
-
-    def calculate_scaled_coordinates(self, camera):
-        center_x, center_y = camera.center_x, camera.center_y
-        scaled_x = int(center_x + (self.x - center_x) * camera.scale)
-        scaled_y = int(center_y + (self.y - center_y) * camera.scale)
-        return scaled_x, scaled_y
-
-    def moved(self, camera):
-        scaled_x, scaled_y = self.calculate_scaled_coordinates(camera)
-        config.screen.blit(self.image, (scaled_x, scaled_y))
-
-    def scale(self, camera):
-        scaled_x, scaled_y = self.calculate_scaled_coordinates(camera)
-        scaled_size = int(self.sprite_px * camera.scale)
-        scaled_img = p.transform.smoothscale(self.image, (scaled_size, scaled_size))
-        
-        if camera.is_point_visible(scaled_x, scaled_y):
-            cropped_img = self.crop_center(scaled_img, scaled_size)
-            config.screen.blit(cropped_img, (scaled_x, scaled_y))
-
-    def draw_to_buffer(self, buffer_surface, camera):
-        scaled_x, scaled_y = self.calculate_scaled_coordinates(camera)
-        scaled_size = int(self.sprite_px * camera.scale)
-        scaled_img = p.transform.smoothscale(self.image, (scaled_size, scaled_size))
-        
-        if camera.is_point_visible(scaled_x, scaled_y):
-            cropped_img = self.crop_center(scaled_img, scaled_size)
-            buffer_surface.blit(cropped_img, (scaled_x, scaled_y))
-
-    def crop_center(self, image, new_size):
-        width, height = image.get_size()
-        x_offset = (width - new_size) // 2
-        y_offset = (height - new_size) // 2
-        crop_rect = p.Rect(x_offset, y_offset, new_size, new_size)
-        cropped_img = image.subsurface(crop_rect)
-        return cropped_img
-
+            
 def info(mouse_x,mouse_y):
     for t in tail:
         if t.rect.collidepoint(mouse_x, mouse_y):
@@ -208,10 +169,7 @@ def info(mouse_x,mouse_y):
             else:
                 print("Наличие дерева на ячейке:", t.wood)
 
-tile_group = p.sprite.Group()
+
 count_tails = 826
 biom_generate(count_tails)
 tail = [tails() for _ in range(count_tails)]
-
-for t in tail:
-    tile_group.add(t)
