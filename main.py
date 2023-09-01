@@ -11,9 +11,10 @@ start_music()
 
 time_since_last_execution = 0
 execution_interval = 250
-menu_active = 1
+menu_active = 0
 menu = Menu()
-
+tail_draw(tail)
+resurse_draw()                 
 while True:
 
 
@@ -21,7 +22,7 @@ while True:
         keys = p.key.get_pressed()
         if keys[p.K_q]:  save_save_data()
         if keys[p.K_r]:  tail = save_loaded_data()
-        
+
 
             
         for event in p.event.get():
@@ -30,15 +31,17 @@ while True:
                 sys.exit()
             elif event.type == p.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_x, mouse_y = event.pos
+                
                 #info(mouse_x, mouse_y)
             elif event.type == p.USEREVENT and event.user_type == p.mixer.SOUND_END:
                 play_next_music()
             elif event.type == p.MOUSEBUTTONDOWN and event.button == 3:
                 mouse_x, mouse_y = event.pos
                 for t in tail:
-                    if t.rect.collidepoint(mouse_x, mouse_y):
-                        fortress_list.append(fortress(t.x, t.y))
-                        fortress_draw()
+                    if t.build_area.collidepoint(mouse_x, mouse_y):
+                        if not t.fortress:
+                            fortress_list.append(fortress(t.x, t.y))
+                            fortress_draw()
 
         
         

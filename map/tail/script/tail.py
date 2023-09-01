@@ -91,10 +91,12 @@ class tails(behaviors):
             img, self.full_image_path = image_tail_choice()
             self.image = p.transform.scale(img, (sprite_px, sprite_px))
             self.rect = p.Rect(self.x, self.y, sprite_px, sprite_px)
+            self.build_area = p.Rect(self.x+13,self.y+10, sprite_px-26,sprite_px-20)
             self.wood = False
             self.iron = False
             self.wheat = False
             self.metal = False
+            self.fortress = False
             spawn_rsc = randint(0,20)
 
             if spawn_rsc == 1:
