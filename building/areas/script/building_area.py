@@ -23,5 +23,7 @@ class fortress(behaviors):
         super().__init__()
         self.sprite_px = sprite_px
         self.x, self.y = x_tail, y_tail
+        self.world = False
+        self.index = 0
         self.image = p.transform.scale(images[0], (sprite_px, sprite_px))
         self.rect = p.Rect(self.x, self.y, sprite_px, sprite_px)

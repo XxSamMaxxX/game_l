@@ -31,7 +31,27 @@ while True:
                 sys.exit()
             elif event.type == p.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_x, mouse_y = event.pos
-                
+                for f in fortress_list:
+                    if f.rect.collidepoint(mouse_x, mouse_y):
+                        index = 0
+                        if f.world:
+                            for t in world_tail:
+                                if f.index == t.index:
+                                    tail_menu.draw()
+                                    t.draw()
+                                    intails()
+                                    tail_draw(tail)
+                                    resurse_draw()
+                                    fortress_draw()
+                        else: 
+                            for t in tail:
+                                index+=1
+                                if t.build_area.collidepoint(mouse_x, mouse_y):
+                                    f.world = True
+                                    f.index = index
+                                    world_tail.append(InTails(t.image, index))
+                                
+
                 #info(mouse_x, mouse_y)
             elif event.type == p.USEREVENT and event.user_type == p.mixer.SOUND_END:
                 play_next_music()

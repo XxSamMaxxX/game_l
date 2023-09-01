@@ -1,8 +1,6 @@
 from controller.module.module import os, choice, p, randint, choices
 
-def img_exact(name):
-
-    current_dir = os.path.dirname(__file__)
+def img_exact(name, current_dir):
 
     img_dir = os.path.join(current_dir, '..', 'img')
     img = p.image.load(os.path.join(img_dir, name +'.png'))

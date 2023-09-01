@@ -1,9 +1,6 @@
 from controller.module.module import*
 from scene.path import*
-from OpenGL.GL import *
-from OpenGL.GLUT import *
-from OpenGL.GLU import *
-from pywavefront import Wavefront
+
 os.environ['SDL_VIDEO_RENDERER'] = 'direct3d'
 p.init()
 
