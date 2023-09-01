@@ -35,11 +35,14 @@ while True:
                     if f.rect.collidepoint(mouse_x, mouse_y):
                         index = 0
                         if f.world:
+                            world_tail_index =-1
                             for t in world_tail:
+                                
                                 if f.index == t.index:
+                                    world_tail_index +=1
                                     tail_menu.draw()
                                     t.draw()
-                                    intails()
+                                    intails(world_tail_index)
                                     tail_draw(tail)
                                     resurse_draw()
                                     fortress_draw()
