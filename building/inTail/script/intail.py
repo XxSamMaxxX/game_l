@@ -1,6 +1,7 @@
 
 import config
 from building.buildings.script.buildings import*
+from human.script.human import*
 
 
 current_dir = os.path.dirname(__file__)
@@ -31,7 +32,7 @@ class InTails_items(behaviors):
             InTails_items.area_y += 202
             InTails_items.area_x = 200
             InTails_items.limit = 0
-            
+
         self.index = InTails_items.limit
 
 
@@ -39,8 +40,10 @@ class InTails_items(behaviors):
         if cat == 1:
             if self.index == 1:
                 self.category = 1
-                self.image = image[0]
-        
+                self.image = image[1]
+            if self.index == 2:
+                self.category = 1
+                self.image = image[0]        
 
 
 class InTails(behaviors):
@@ -75,6 +78,9 @@ InTails_item = [InTails_items() for _ in range(6)]
 
 
 def intails(fortress_index):
+    human_list = [Humans() for _ in range(10)]
+
+    buffer_surface = p.Surface((config.WIDTH, config.HEIGHT))
 
     menu = True
     time_since_last_execution = 0
@@ -86,13 +92,20 @@ def intails(fortress_index):
         if t.index == fortress_index:
             t.draw()
 
+    for human in human_list:
+        human.draw1(buffer_surface)
+            
+
     if buildings:
         for i in buildings:
             if fortress_index == i.index:
                 i.draw()
+                
 
+    config.screen.blit(buffer_surface, (0, 0))
     
     while menu:
+
         for event in p.event.get():
             if event.type == p.QUIT:
                 p.quit()
@@ -155,5 +168,10 @@ def intails(fortress_index):
             for i in InTails_item:
                 i.visible = False
 
+        for human in human_list:
+            human.move_towards_target()
+            buffer_surface.fill((0,0,0,0))
+            human.draw1(buffer_surface)
+            
         p.display.flip()
         config.clock.tick(config.FPS)

@@ -22,6 +22,8 @@ class Buildings(behaviors):
 def create_build(category, index,fortress_index):
     if category == 1:
         if index == 1:
-            image = images[0]
+            image = images[0]          
+        if index == 2:
+            image = images[1]
     buildings.append(Buildings(image, fortress_index))
 
