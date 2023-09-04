@@ -5,7 +5,7 @@ from building.buildings.script.buildings import*
 
 current_dir = os.path.dirname(__file__)
 
-fortress_list = []
+
 world_tail = []
 
 image = img_all_folder('slot_icon',current_dir)
@@ -22,6 +22,7 @@ class InTails_items(behaviors):
         self.image = image[-1]
         self.rect = p.Rect(self.x, self.y, 190, 190)
         self.category = 0
+        self.visible = False
 
         InTails_items.limit+=1
         if InTails_items.limit < 6:
@@ -30,6 +31,7 @@ class InTails_items(behaviors):
             InTails_items.area_y += 202
             InTails_items.area_x = 200
             InTails_items.limit = 0
+            
         self.index = InTails_items.limit
 
 
@@ -69,19 +71,25 @@ tail_menu = InTails_menu()
 InTails_item = [InTails_items() for _ in range(6)]
 
 
-time_since_last_execution = 0
-execution_interval = 100
 
 
 
+def intails(fortress_index):
 
-def intails(world_tail_index, fortress_index):
-    global time_since_last_execution, execution_interval
+    menu = True
+    time_since_last_execution = 0
+    execution_interval = 100
+
+
+    tail_menu.draw()
+    for t in world_tail:
+        if t.index == fortress_index:
+            t.draw()
+
     if buildings:
         for i in buildings:
-            if int(fortress_index) == int(i.index):
+            if fortress_index == i.index:
                 i.draw()
-    menu = True
 
     
     while menu:
@@ -89,53 +97,63 @@ def intails(world_tail_index, fortress_index):
             if event.type == p.QUIT:
                 p.quit()
                 sys.exit()
-        
-            if event.type == p.MOUSEBUTTONDOWN and event.button == 1:
+
+            elif event.type == p.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_x, mouse_y = event.pos
+
                 for i in InTails_item:
-                    if i.rect.collidepoint(mouse_x, mouse_y):
-                        create_build(i.category, i.index, fortress_index)
-                        time_since_last_execution = 0
+                    if i.visible == True:
+                        if i.rect.collidepoint(mouse_x, mouse_y):
+                            time_since_last_execution = 0
+                            create_build(i.category, i.index, fortress_index)
                         
                 if tail_menu.btn_exit.collidepoint(mouse_x, mouse_y):
                     menu = False
                     tail_menu.house = False
-                elif tail_menu.btn_house.collidepoint(mouse_x, mouse_y):
+
+                if tail_menu.btn_house.collidepoint(mouse_x, mouse_y):
                     tail_menu.house = not tail_menu.house
 
+            elif event.type == p.MOUSEMOTION:
+                if buildings:
+                    for i in buildings:
+                        if not i.place:
+                            mouse_x, mouse_y = event.pos
+                            new_x = mouse_x - 100
+                            new_y = mouse_y - 100
+                            # Перемещение объекта и обработка интервала времени
+                            i.x, i.y = new_x, new_y
+                            i.rect.x, i.rect.y = new_x, new_y
 
+                            tail_menu.draw()
+                            for t in world_tail:
+                                if t.index == fortress_index:
+                                    t.draw()
 
-        if buildings:
-            mouse_x, mouse_y = event.pos
-            new_x = mouse_x - 100
-            new_y = mouse_y - 100
+                            i.draw()
 
-            time_since_last_execution += config.clock.get_time()
+                            for x in buildings:
+                                if x.place and fortress_index == x.index:
+                                    x.draw()
 
-            for i in buildings:
-                if not i.place:
-                    # Перемещение объекта и обработка интервала времени
-                    i.x, i.y = new_x, new_y
-                    i.rect.x, i.rect.y = new_x, new_y
-
-                    tail_menu.draw()
-                    world_tail[world_tail_index].draw()
-
-                    for x in buildings:
-                        if x.place and int(fortress_index) == int(x.index):
-                            x.draw()
-
-                    i.draw()
-
-                    if time_since_last_execution >= execution_interval:
-                        if event.type == p.MOUSEBUTTONDOWN and event.button == 1:
+                            
+                time_since_last_execution += config.clock.get_time()
+            if event.type == p.MOUSEBUTTONDOWN and event.button == 1:
+                
+                if time_since_last_execution >= execution_interval:
+                    for i in buildings:
+                        if not i.place:
                             i.place = True
 
                     
         if tail_menu.house:
             for i in InTails_item:
+                i.visible = True
                 i.select_icon(1)
                 i.draw()
+        else:
+            for i in InTails_item:
+                i.visible = False
 
         p.display.flip()
         config.clock.tick(config.FPS)
