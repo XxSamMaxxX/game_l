@@ -11,7 +11,8 @@ class behaviors:
         config.screen.blit(self.image, self.rect)
     def draw1(self,surface):
         surface.blit(self.image, self.rect)
-    
+
+
 def collide(who, whot):
     if who.rect.colliderect(whot):
         return True

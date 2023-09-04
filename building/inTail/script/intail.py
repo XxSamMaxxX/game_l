@@ -79,9 +79,8 @@ InTails_item = [InTails_items() for _ in range(6)]
 
 def intails(fortress_index):
     human_list = [Humans() for _ in range(10)]
-
-    buffer_surface = p.Surface((config.WIDTH, config.HEIGHT))
-
+    
+    
     menu = True
     time_since_last_execution = 0
     execution_interval = 100
@@ -92,9 +91,6 @@ def intails(fortress_index):
         if t.index == fortress_index:
             t.draw()
 
-    for human in human_list:
-        human.draw1(buffer_surface)
-            
 
     if buildings:
         for i in buildings:
@@ -102,14 +98,39 @@ def intails(fortress_index):
                 i.draw()
                 
 
-    config.screen.blit(buffer_surface, (0, 0))
-    
+    timer_event = p.USEREVENT + 1
+    p.time.set_timer(timer_event, 2000)
+    working_check_list = []
     while menu:
+     
+        for t in world_tail:
+            if t.index == fortress_index:   
+                t.draw()
+        for human in human_list:
+            human.move_towards_target()
+            human.draw()
 
+        if buildings:
+            for i in buildings:
+                if fortress_index == i.index:
+                    i.draw()
+                #p.draw.polygon(config.screen, config.BLACK, human.points)
         for event in p.event.get():
             if event.type == p.QUIT:
                 p.quit()
                 sys.exit()
+            elif event.type == timer_event:
+                if working_check_list:
+                    time_out = randint(1, 10)
+                    if time_out == 1:
+                        human = choice(human_list)
+                        if human.prof == 'cival':
+                            for j in working_check_list:
+                                human.prof = j[0]
+                                human.workspace = (j[1], j[2])
+                                working_check_list.remove(j)
+                                break
+                        
 
             elif event.type == p.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_x, mouse_y = event.pos
@@ -118,7 +139,9 @@ def intails(fortress_index):
                     if i.visible == True:
                         if i.rect.collidepoint(mouse_x, mouse_y):
                             time_since_last_execution = 0
-                            create_build(i.category, i.index, fortress_index)
+                            job,employees = create_build(i.category, i.index, fortress_index)
+
+
                         
                 if tail_menu.btn_exit.collidepoint(mouse_x, mouse_y):
                     menu = False
@@ -157,8 +180,12 @@ def intails(fortress_index):
                     for i in buildings:
                         if not i.place:
                             i.place = True
-
+                            for _ in range(employees):
+                                working_check_list.append((job, i.rect.x, i.rect.y))
                     
+        
+
+
         if tail_menu.house:
             for i in InTails_item:
                 i.visible = True
@@ -166,12 +193,8 @@ def intails(fortress_index):
                 i.draw()
         else:
             for i in InTails_item:
-                i.visible = False
-
-        for human in human_list:
-            human.move_towards_target()
-            buffer_surface.fill((0,0,0,0))
-            human.draw1(buffer_surface)
-            
+                i.visible = False            
+        
+        
         p.display.flip()
         config.clock.tick(config.FPS)
