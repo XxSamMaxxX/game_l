@@ -6,4 +6,4 @@ from scene.fortress_generation import*
 from menu.script.menu import*
 from save.save import*
 from building.inTail.script.intail import*
-from building.areas.script.building_area import*
+from building.areas.script.fortress import*

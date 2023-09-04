@@ -1,10 +1,16 @@
 
 import config
 from building.buildings.script.buildings import*
-fortress_list = []
+
+
 current_dir = os.path.dirname(__file__)
+
+fortress_list = []
 world_tail = []
+
 image = img_all_folder('slot_icon',current_dir)
+
+
 class InTails_items(behaviors):
     area_x = 460
     area_y = 5
@@ -25,6 +31,8 @@ class InTails_items(behaviors):
             InTails_items.area_x = 200
             InTails_items.limit = 0
         self.index = InTails_items.limit
+
+
     def select_icon(self, cat):
         if cat == 1:
             if self.index == 1:
@@ -32,7 +40,6 @@ class InTails_items(behaviors):
                 self.image = image[0]
         
 
-InTails_item = [InTails_items() for _ in range(6)]
 
 class InTails(behaviors):
     def __init__(self, image, index):
@@ -45,6 +52,7 @@ class InTails(behaviors):
         self.rect = p.Rect(self.x, self.y, self.sprite_px, self.sprite_px)
 
 
+
 class InTails_menu(behaviors):
     def __init__(self):
         super().__init__()
@@ -54,17 +62,28 @@ class InTails_menu(behaviors):
         self.btn_exit = p.Rect(1800, 25, 100, 100)
         self.btn_house = p.Rect(80, 55, 100, 100)
         self.house = False
+
+
+
 tail_menu = InTails_menu()
+InTails_item = [InTails_items() for _ in range(6)]
+
 
 time_since_last_execution = 0
 execution_interval = 100
 
-def intails(world_tail_index):
+
+
+
+def intails(world_tail_index, fortress_index):
     global time_since_last_execution, execution_interval
     if buildings:
         for i in buildings:
-            i.draw()
+            if int(fortress_index) == int(i.index):
+                i.draw()
     menu = True
+
+    
     while menu:
         for event in p.event.get():
             if event.type == p.QUIT:
@@ -75,7 +94,7 @@ def intails(world_tail_index):
                 mouse_x, mouse_y = event.pos
                 for i in InTails_item:
                     if i.rect.collidepoint(mouse_x, mouse_y):
-                        create_build(i.category, i.index)
+                        create_build(i.category, i.index, fortress_index)
                         time_since_last_execution = 0
                         
                 if tail_menu.btn_exit.collidepoint(mouse_x, mouse_y):
@@ -87,31 +106,31 @@ def intails(world_tail_index):
 
 
         if buildings:
+            mouse_x, mouse_y = event.pos
+            new_x = mouse_x - 100
+            new_y = mouse_y - 100
+
+            time_since_last_execution += config.clock.get_time()
+
             for i in buildings:
                 if not i.place:
-
-                    
-                    mouse_x, mouse_y = event.pos
-                    new_x = mouse_x - 100
-                    new_y = mouse_y - 100
-                    
                     # Перемещение объекта и обработка интервала времени
                     i.x, i.y = new_x, new_y
                     i.rect.x, i.rect.y = new_x, new_y
 
-
                     tail_menu.draw()
                     world_tail[world_tail_index].draw()
-                    for x in buildings:
-                        if x.place:
-                            x.draw()
-                    i.draw()
 
-                    time_since_last_execution += config.clock.get_time()
+                    for x in buildings:
+                        if x.place and int(fortress_index) == int(x.index):
+                            x.draw()
+
+                    i.draw()
 
                     if time_since_last_execution >= execution_interval:
                         if event.type == p.MOUSEBUTTONDOWN and event.button == 1:
                             i.place = True
+
                     
         if tail_menu.house:
             for i in InTails_item:
