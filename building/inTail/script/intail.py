@@ -78,7 +78,7 @@ InTails_item = [InTails_items() for _ in range(6)]
 
 
 def intails(fortress_index):
-    human_list = [Humans() for _ in range(10)]
+    human_list = [Humans(fortress_index) for _ in range(10)]
     
     
     menu = True
@@ -106,6 +106,7 @@ def intails(fortress_index):
         for t in world_tail:
             if t.index == fortress_index:   
                 t.draw()
+
         for human in human_list:
             human.move_towards_target()
             human.draw()
@@ -115,19 +116,20 @@ def intails(fortress_index):
                 if fortress_index == i.index:
                     i.draw()
                 #p.draw.polygon(config.screen, config.BLACK, human.points)
+
         for event in p.event.get():
             if event.type == p.QUIT:
                 p.quit()
                 sys.exit()
             elif event.type == timer_event:
                 if working_check_list:
-                    time_out = randint(1, 10)
+                    time_out = randint(1, 2)
                     if time_out == 1:
                         human = choice(human_list)
                         if human.prof == 'cival':
                             for j in working_check_list:
                                 human.prof = j[0]
-                                human.workspace = (j[1], j[2])
+                                human.workspace = (j[1]+120, j[2]+120)
                                 working_check_list.remove(j)
                                 break
                         
@@ -174,14 +176,14 @@ def intails(fortress_index):
 
                             
                 time_since_last_execution += config.clock.get_time()
+
             if event.type == p.MOUSEBUTTONDOWN and event.button == 1:
-                
                 if time_since_last_execution >= execution_interval:
                     for i in buildings:
                         if not i.place:
                             i.place = True
                             for _ in range(employees):
-                                working_check_list.append((job, i.rect.x, i.rect.y))
+                                working_check_list.append((job, i.x, i.y))
                     
         
 
