@@ -302,6 +302,7 @@ def intails(fortress_index):
                 if my_buildings:
                     for i in my_buildings:
                         if not i.place:
+                            p.draw.rect(config.screen, (0,0,0), i.rect)
                             mouse_x, mouse_y = event.pos
                             if not i.rect.colliderect(my_tail.down_area) or not i.rect.colliderect(my_tail.up_area) or not i.rect.colliderect(my_tail.left_area) or not i.rect.colliderect(my_tail.right_area):
                                 
@@ -316,7 +317,7 @@ def intails(fortress_index):
                                 for x in my_buildings:
                                     if x.place:
                                         x.draw()
-
+                       
                             
                 time_since_last_execution += config.clock.get_time()
 
