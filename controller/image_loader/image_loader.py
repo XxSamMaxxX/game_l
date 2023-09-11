@@ -7,7 +7,12 @@ def img_exact(name, current_dir):
 
     return img
 
+def img_exact_modify(path1, path2, category, name, current_dir):
 
+    img_dir = os.path.join(current_dir, '..', '..',path1,path2, category,name)
+    img = p.image.load(os.path.join(img_dir, name +'.png'))
+
+    return img
 def img_any(name, current_dir, preset=True):
     img_dir = os.path.join(current_dir, '..', 'img', name)
     
@@ -58,7 +63,7 @@ def img_animation(name, current_dir,):
         images.append(image)
     return images
 
-def img_all(current_dir,):
+def img_all(current_dir):
     img_dir = os.path.join(current_dir, '..', 'img')
 
     image_paths = []
@@ -73,7 +78,7 @@ def img_all(current_dir,):
         images.append(image)
     return images
 
-def img_all_folder(name, current_dir,):
+def img_all_folder(name, current_dir):
     img_dir = os.path.join(current_dir, '..', 'img', name)
 
     image_paths = []
@@ -88,3 +93,16 @@ def img_all_folder(name, current_dir,):
         images.append(image)
     return images
 
+def img_all_folder_modify(name,category, current_dir):
+    img_dir = os.path.join(current_dir, '..', 'img', category,name)
+
+    image_paths = []
+    for filename in os.listdir(img_dir):
+        if filename.endswith('.png'):
+            image_path = os.path.join(img_dir, filename)
+            image_paths.append(image_path)
+    images = []
+    for image_path in image_paths:
+        image = p.image.load(image_path)
+        images.append(image)
+    return images

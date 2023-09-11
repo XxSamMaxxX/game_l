@@ -1,6 +1,8 @@
 #СПРАВКА
 '''
 
+Версия игры: АЛЬФА 1
+
 Стандартные настройки:
 
 Ширина, Высота экрана = 1920 на 1080
@@ -30,7 +32,7 @@ from controller.scale.scale import*
 
 #Включаем музыку в игре
 p.mixer.init()
-start_music()
+#start_music()
 
 
 #Задержка в 0.25 секунды
@@ -83,7 +85,7 @@ while True:
                         
                             if f.rect.collidepoint(mouse_x, mouse_y):
                                 f.world = True
-                                world_tail.append(InTails(tail[f.index].image, f.index))
+                                world_tail.append(InTails(tail[f.index].image, f.index, tail[f.index].biome))
         #=======================================================================
 
         #Переключаем музыку если она остановится

@@ -47,32 +47,35 @@ def image_tail_choice():
         if waters >= 1:
             ind,img = img_any('water', current_dir)
             waters-=1
+            biome = 'water'
         else:
             ind,img = img_any('forest', current_dir) 
-        
+            biome = 'forest'
     elif rnd >=4 and rnd <=9:
         if stones >= 1:
             ind,img = img_any('stone', current_dir)
             stones-=1
+            biome = 'stone'
         else:
             ind,img = img_any('forest', current_dir)
-
+            biome = 'forest'
     elif rnd >=10 and rnd <=17:
         if sands >= 1:
             ind,img = img_any('sand', current_dir)
             sands-=1
+            biome = 'sand'
         else:
             ind,img = img_any('forest', current_dir) 
-            
+            biome = 'forest'
     else:
         ind,img = img_any('forest', current_dir)
-        
+        biome = 'forest'
     image_index = ind
     img_dir = os.path.join(current_dir, '..', 'img')
 
     image_filename = os.path.basename(image_index)
 
-    return img,ind
+    return img,ind,biome
             
 class tails(behaviors):
     area_x = -43
@@ -88,7 +91,7 @@ class tails(behaviors):
         if saved == 0:
             self.sprite_px = sprite_px
             self.x, self.y = tails.area_x, tails.area_y
-            img, self.full_image_path = image_tail_choice()
+            img, self.full_image_path, self.biome = image_tail_choice()
             self.image = p.transform.scale(img, (sprite_px, sprite_px))
             self.rect = p.Rect(self.x, self.y, sprite_px, sprite_px)
             self.build_area = p.Rect(self.x+13,self.y+10, sprite_px-26,sprite_px-20)

@@ -2,6 +2,7 @@
 import config
 from building.buildings.script.buildings import*
 
+import building.inTail.script.intail as Intails
 
 
 current_dir = os.path.dirname(__file__)
@@ -17,28 +18,32 @@ area_x = 0
 area_y = 0
 radius = 3 
 pole_list = []
+
+
+
 class Humans(behaviors):
-    
-
-
+    map_resourse = {}
+    photo = img_all(current_dir)
     def __init__(self, fortress_index):
         self.sprite_px = 16
         self.target_x = None
         self.target_y = None
-        self.image = img_exact('human',current_dir)
+        
         self.x = randint(1000, 1300)
         self.y = randint(600, 800)
         self.prof = 'cival'
         self.workspace = 0
         self.speed = 1
         self.index = fortress_index
-        self.missoin = 0
-
-        self.rect = p.Rect(self.x, self.y, self.sprite_px, self.sprite_px)     
-
-
+        self.mission = 0
+        self.my_target = 0
+        self.rect = p.Rect(self.x, self.y, self.sprite_px, self.sprite_px)  
+        self.image = p.transform.scale(Humans.photo[2], (16,16)) 
+        if fortress_index not in Humans.map_resourse:
+            Humans.map_resourse[fortress_index] = Intails.human_resourse(fortress_index)
+            
     def generate_random_target(self):
-        x, y = randint(730, 1350),randint(195, 863)
+        x, y = randint(190, 1400),randint(170, 855)
         self.target_x = x
         self.target_y = y
         self.speed = 1
@@ -46,46 +51,73 @@ class Humans(behaviors):
 
     def generate_job_target(self):
         global pole, area_x, area_y, limit_pole, stadia,limit_pole_y
+        if self.prof == 'farmer':
 
-        if stadia == 0:
-            area_x = self.workspace[0] - 200 
-            area_y = self.workspace[1] - 50
-            stadia = 1
-        if self.x == self.workspace[0] and self.y == self.workspace[1]:
-            if pole <=5:
-                pole+=1
-                if limit_pole_y <=1:
-                    if limit_pole <=2   :
-                        area_x += 32
-                        limit_pole+=1
-                    else:
-                        area_x = self.workspace[0] - 200 
-                        area_y += 32
-                        area_x += 32
-                        limit_pole = 1
-                        limit_pole_y += 1
+            if stadia == 0:
+                area_x = self.workspace[0] - 170 
+                area_y = self.workspace[1] - 50
+                stadia = 1
+            if self.x == self.workspace[0] and self.y == self.workspace[1]:
+                if pole <=5:
+                    pole+=1
+                    if limit_pole_y <=1:
+                        if limit_pole <=2:
+                            area_x += 16
+                            limit_pole+=1
+                        else:
+                            area_x = self.workspace[0] - 170 
+                            area_y += 16
+                            area_x += 16
+                            limit_pole = 1
+                            limit_pole_y += 1
 
-                self.target_x = area_x
-                self.target_y = area_y
-                self.speed = 1
-                self.missoin = 1
-                            
-                print('Иду делать поле!')
+                    self.target_x = area_x
+                    self.target_y = area_y
+                    self.speed = 1
+                    self.mission = 1
+                                
+                    print('Иду делать поле!')
+                else:
+                    x, y = choice(pole_list)
+                    self.target_x = x
+                    self.target_y = y
+                    self.speed = 1
+                    self.mission = 0
+                    print('Все поля сделаны')
             else:
-                x, y = choice(pole_list)
-                self.target_x = x
-                self.target_y = y
-                self.speed = 1
+                self.target_x = self.workspace[0]
+                self.target_y = self.workspace[1]
                 self.mission = 0
-                print('Все поля сделаны')
-            
-            
-        else:
-            self.target_x = self.workspace[0]
-            self.target_y = self.workspace[1]
-            self.mission = 0
-            self.speed = 1
-            print('Иду в мельницу')
+                self.speed = 1
+                print('Иду в мельницу')
+
+        elif self.prof == 'forester':
+            if self.x == self.workspace[0] and self.y == self.workspace[1]:
+                if len(Humans.map_resourse[self.index]) < 3:
+                    x, y = randint(190, 1400),randint(170, 855)
+                    self.target_x = x
+                    self.target_y = y
+                    self.speed = 1
+                    self.mission = 1
+                    
+                                
+                    print('Иду садить дерево!')
+                else:
+                    obj = choice(Humans.map_resourse[self.index])
+                    x,y = obj.x, obj.y
+                    self.target_x = x
+                    self.target_y = y
+                    self.speed = 1
+                    self.mission = 2
+                    self.my_target = obj
+                    print('Иду рубить дерево!')
+            else:
+                self.target_x = self.workspace[0]
+                self.target_y = self.workspace[1]
+                self.mission = 0
+                self.speed = 1
+                print('Иду в хижину')
+
 
     def move_towards_target(self):
 
@@ -94,23 +126,6 @@ class Humans(behaviors):
                 self.generate_random_target()
                 
             else:
-            
-
-                self.pixel_colors = []
-
-
-                for x_offset in range(-radius, radius + 1):
-                    for y_offset in range(-radius, radius + 1):
-                        x = self.x + x_offset
-                        y = self.y + y_offset
-            
-                        self.pixel_color = config.screen.get_at((x, y))
-                        self.pixel_colors.append(self.pixel_color)
-
-                if (0, 0, 0, 255) in self.pixel_colors:
-                    self.speed = 0
-                    self.pixel_colors = []
-                    self.generate_random_target()
             
                 if self.x < self.target_x:
                     self.x += self.speed
@@ -124,7 +139,7 @@ class Humans(behaviors):
 
                 self.rect = p.Rect(self.x, self.y, self.sprite_px, self.sprite_px)
 
-                # Проверяем достижение цели
+               
                 if self.x == self.target_x and self.y == self.target_y:
                     self.target_x = None
                     self.target_y = None
@@ -146,13 +161,51 @@ class Humans(behaviors):
                 self.rect = p.Rect(self.x, self.y, self.sprite_px, self.sprite_px)                
                 
                 if self.x == self.target_x and self.y == self.target_y:
-                    if self.missoin == 1:
+                    if self.mission == 1:
                         create_adjoining(self.prof,self.index, self.x, self.y)
                         self.target_x = None
                         self.target_y = None
-                        self.missoin = 0
+                        self.mission = 0
                         pole_list.append((self.x, self.y))
                         print('Миссию выполнил')
+                        
+                    else:
+                        self.target_x = None
+                        self.target_y = None
+                        print('Нет миссий')
+
+        if self.prof == 'forester':
+                if self.target_x is None or self.target_y is None:
+                    self.generate_job_target()
+
+                if self.x < self.target_x:
+                    self.x += self.speed
+                elif self.x > self.target_x:
+                    self.x -= self.speed
+
+                if self.y < self.target_y:
+                    self.y += self.speed
+                elif self.y > self.target_y:
+                    self.y -= self.speed
+
+                self.rect = p.Rect(self.x, self.y, self.sprite_px, self.sprite_px)                
+                
+                if self.x == self.target_x and self.y == self.target_y:
+                    if self.mission == 1:
+                        
+                        Humans.map_resourse[self.index].append(create_adjoining(self.prof,self.index, self.x, self.y))
+                        self.target_x = None
+                        self.target_y = None
+                        self.mission = 0
+                        print('Миссию выполнил')
+                    elif self.mission == 2:
+                        Humans.map_resourse[self.index].remove(self.my_target)
+                        
+                        self.target_x = None
+                        self.target_y = None
+                        self.mission = 0
+                        print('Миссию выполнил')
+                        
                     else:
                         self.target_x = None
                         self.target_y = None
