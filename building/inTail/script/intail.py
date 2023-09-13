@@ -194,14 +194,22 @@ InTails_item = [InTails_items() for _ in range(11)]
 
 
 my_buildings =[]
-def human_resourse(fortress_index):
+def trees_resourse(fortress_index):
     for t in world_tail:
         if t.index == fortress_index:
             trees_list = t.trees_list
 
     return trees_list
 
+def stones_resourse(fortress_index):
+    for t in world_tail:
+        if t.index == fortress_index:
+            stones_list = t.stones_list
 
+    return stones_list
+
+def buildings_check():
+    return my_buildings
 def intails(fortress_index):
     category = 0
     global my_buildings
@@ -267,9 +275,11 @@ def intails(fortress_index):
                             i.rect.colliderect(my_tail.right_area)):
                             i.draw()
         
-        for tree in Humans.map_resourse[fortress_index]:
+        for tree in Humans.trees_resourse[fortress_index]:
             tree.draw()
-            
+        for stone in Humans.stones_resourse[fortress_index]:
+            stone.draw()           
+        
         for event in p.event.get():
             if event.type == p.QUIT: p.quit(); sys.exit()        
             elif event.type == timer_event:
@@ -287,6 +297,8 @@ def intails(fortress_index):
                                     image = p.transform.scale(Humans.photo[2], (16,16)) 
                                 human.prof = j[0]
                                 human.image = image
+                                human.my_work_house = j[3]
+                                
                                 human.workspace = (j[1]+120, j[2]+120)
                                 working_check_list.remove(j)
                                 break
@@ -304,6 +316,7 @@ def intails(fortress_index):
                         time_since_last_execution = 0
                         job,employees, build = create_build(category,i.index, fortress_index)
                         my_buildings.append(build)
+                        Humans.buildings_list[fortress_index] = build
                         
             elif event.type == p.MOUSEMOTION:
                 if my_buildings:
@@ -332,7 +345,7 @@ def intails(fortress_index):
                                 i.rect.colliderect(my_tail.right_area)):
                                 i.place = True
                                 for _ in range(employees):
-                                    working_check_list.append((job, i.x, i.y))
+                                    working_check_list.append((job, i.x, i.y,i.my_id))
 
 
          

@@ -26,6 +26,7 @@ images =  img_all(current_dir)
 buildings = []
 
 class Buildings(behaviors):
+    my_id = -1
     def __init__(self, image,fortress_index=-1, employees=-1, job_title=0, name='', x=0,y=0):
         super().__init__()
         self.sprite_px = 64
@@ -36,10 +37,12 @@ class Buildings(behaviors):
             self.place = False
         self.image = image
         self.index = fortress_index
+        self.my_id = Buildings.my_id
         self.rect = p.Rect(self.x, self.y, self.sprite_px, self.sprite_px)
         self.employees = employees
         self.name = name
-
+        self.resourse = 0
+        Buildings.my_id +=1
     
 def create_build(category,index,fortress_index):
     if category == 1:
