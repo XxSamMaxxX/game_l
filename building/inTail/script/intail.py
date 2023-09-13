@@ -258,8 +258,14 @@ def intails(fortress_index):
 
         if my_buildings:
             for i in my_buildings:
-                    i.draw()
-
+                    if i.place:
+                        i.draw()
+                    else:
+                        if not (i.rect.colliderect(my_tail.down_area) or
+                            i.rect.colliderect(my_tail.up_area) or
+                            i.rect.colliderect(my_tail.left_area) or
+                            i.rect.colliderect(my_tail.right_area)):
+                            i.draw()
         
         for tree in Humans.map_resourse[fortress_index]:
             tree.draw()
@@ -293,6 +299,7 @@ def intails(fortress_index):
                     if i.rect.collidepoint(mouse_x, mouse_y) and i.index < 6:
                         refresh_slot_icon(i.index)
                         category = i.index
+                        time_since_last_execution = 0
                     elif i.rect.collidepoint(mouse_x, mouse_y) and i.index > 5:
                         time_since_last_execution = 0
                         job,employees, build = create_build(category,i.index, fortress_index)
@@ -303,32 +310,29 @@ def intails(fortress_index):
                     for i in my_buildings:
                         if not i.place:
                             mouse_x, mouse_y = event.pos
-                            if not i.rect.colliderect(my_tail.down_area) or not i.rect.colliderect(my_tail.up_area) or not i.rect.colliderect(my_tail.left_area) or not i.rect.colliderect(my_tail.right_area):
-                                
-                                new_x = mouse_x - 40
-                                new_y = mouse_y - 80
-                           
-                                i.x, i.y = new_x, new_y
-                                i.rect.x, i.rect.y = new_x, new_y
+                            new_x = mouse_x - 40
+                            new_y = mouse_y - 80           
+                            i.x, i.y = new_x, new_y
+                            i.rect.x, i.rect.y = new_x, new_y                            
 
-                                my_tail.draw()
-                                i.draw()
-                                for x in my_buildings:
-                                    if x.place:
-                                        x.draw()
 
+
+                       
                             
                 time_since_last_execution += config.clock.get_time()
 
             if event.type == p.MOUSEBUTTONDOWN and event.button == 1:
                 if time_since_last_execution >= execution_interval:
+                    print(1)
                     for i in my_buildings:
                         if not i.place:
-                            i.place = True
-                            for _ in range(employees):
-                                working_check_list.append((job, i.x, i.y))
-                    
-        
+                            if not (i.rect.colliderect(my_tail.down_area) or
+                                i.rect.colliderect(my_tail.up_area) or
+                                i.rect.colliderect(my_tail.left_area) or
+                                i.rect.colliderect(my_tail.right_area)):
+                                i.place = True
+                                for _ in range(employees):
+                                    working_check_list.append((job, i.x, i.y))
 
 
          
